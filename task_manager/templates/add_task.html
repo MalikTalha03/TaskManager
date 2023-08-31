@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tasks</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h1 class="text-center">Task Manager</h1>
+                
+                <form method="POST" action="" id="add-task-form">
+                    {% csrf_token %}
+                    <!-- Title Input Box -->
+                    <div class="form-group">
+                        <label for="title">Title:</label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
+                    </div>
+                    <!-- Description Input Box -->
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter description" required></textarea>
+                    </div>
+                    <!-- Date Picker -->
+                    <div class="form-group">
+                        <label for="date">Date:</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const addTaskForm = document.getElementById("add-task-form");
+            
+            addTaskForm.addEventListener("submit", function(event) {
+                const title = addTaskForm.querySelector("#title");
+                const description = addTaskForm.querySelector("#description");
+                const date = addTaskForm.querySelector("#date");
+                
+                if (!title.value || !description.value || !date.value) {
+                    event.preventDefault(); // Prevent form submission
+                    alert("Please fill out all the required fields.");
+                }
+            });
+        });
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager Dashboard</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+    <style>
+        .task-description {
+            display: none;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-name {
+            margin-right: 10px;
+        }
+        .cssbuttons-io-button {
+            display: flex;
+            align-items: center;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 0.7em 1.4em 0.7em 1.1em;
+            color: white;
+            background: #ad5389;
+            background: linear-gradient(0deg, rgba(20,167,62,1) 0%, rgba(102,247,113,1) 100%);
+            border: none;
+            box-shadow: 0 0.7em 1.5em -0.5em #14a73e98;
+            letter-spacing: 0.05em;
+            border-radius: 20em;
+        }
+
+        .cssbuttons-io-button svg {
+            margin-right: 6px;
+        }
+
+        .cssbuttons-io-button:hover {
+            box-shadow: 0 0.5em 1.5em -0.5em #14a73e98;
+        }
+
+        .cssbuttons-io-button:active {
+            box-shadow: 0 0.3em 1em -0.5em #14a73e98;
+        }
+        .Btn {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition-duration: .3s;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+        }
+        .Btn.red {
+            background-color: rgb(255, 65, 65);
+        }
+
+/* Green button */
+        .Btn.green {
+             background-color: rgb(5, 65, 65);
+        }
+
+/* plus sign */
+        .sign {
+            width: 100%;
+            transition-duration: .3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sign svg {
+            width: 17px;
+        }
+
+        .sign svg path {
+            fill: white;
+        }
+/* text */
+        .text {
+            position: absolute;
+            right: 0%;
+            width: 0%;
+            opacity: 0;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition-duration: .3s;
+        }
+/* hover effect on button width */
+        .Btn:hover {
+            width: 125px;
+            border-radius: 40px;
+            transition-duration: .3s;
+        }
+
+        .Btn:hover .sign {
+            width: 30%;
+            transition-duration: .3s;
+            padding-left: 20px;
+        }
+/* hover effect button's text */
+        .Btn:hover .text {
+            opacity: 1;
+            width: 70%;
+            transition-duration: .3s;
+            padding-right: 10px;
+        }
+/* button click effect*/
+        .Btn:active {
+            transform: translate(2px ,2px);
+        }
+        .radio-buttons-container {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.radio-button {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.radio-button__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radio-button__label {
+  display: inline-block;
+  padding-left: 30px;
+  margin-bottom: 10px;
+  position: relative;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.radio-button__custom {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #555;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.radio-button__input:checked + .radio-button__label .radio-button__custom {
+  transform: translateY(-50%) scale(0.9);
+  border: 5px solid #4c8bf5;
+  color: #4c8bf5;
+}
+
+.radio-button__input:checked + .radio-button__label {
+  color: #4c8bf5;
+}
+
+.radio-button__label:hover .radio-button__custom {
+  transform: translateY(-50%) scale(1.2);
+  border-color: #4c8bf5;
+  box-shadow: 0 0 10px #4c8bf580;
+}
+
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Task Manager</a>
+            <div class="user-info d-flex align-items-center">
+                <span class="user-name">{{ user_name }}</span>
+                <div class="d-flex align-items-center ml-2">
+                    <a href="{% url 'add_task' %}">
+                    <button class="Btn green">
+                        <div class="sign"><svg viewBox="0 0 512 512"><path d="M256 80a32 32 0 0 1 32 32v128h128a32 32 0 0 1 0 64H288v128a32 32 0 0 1-64 0V304H96a32 32 0 0 1 0-64h128V112a32 32 0 0 1 32-32z"></path></svg></div>
+                        <div class="text">Add</div>
+                      </button>
+                    </a>
+                    <a href="{% url 'logout' %}">
+                    <button class="Btn red">
+                        <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
+                        <div class="text">Logout</div>
+                    </button>
+                    </a>
+                          
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        To-Do
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for user in todo_tasks %}
+                            <li class="list-group-item">
+                                <div class="radio-buttons-container">
+                                    <div class="radio-button">
+                                        <input name="radio-group" id="radio{{ user.id }}" class="radio-button__input" type="radio" data-task-id="{{ user.id }}">
+                                        <label for="radio{{ user.id }}" class="radio-button__label">
+                                            <span class="radio-button__custom"></span>
+                                        </label>
+                                        {{ user.task }}
+                                    </div>
+                                </div>
+                                <div class="task-description">
+                                    {{ user.description }}
+                                </div>
+                                
+                                
+                                <div class="task-description">
+                                    {{ user.description }}
+                                </div>
+                            </li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">No tasks in this section.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        Pending
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for user in pending_tasks %}
+                            <li class="list-group-item">
+                                <div class="radio-buttons-container">
+                                    <div class="radio-button">
+                                        <input name="radio-group" id="radio{{ user.id }}" class="radio-button__input" type="radio" data-task-id="{{ user.id }}">
+                                        <label for="radio{{ user.id }}" class="radio-button__label">
+                                            <span class="radio-button__custom"></span>
+                                        </label>
+                                        {{ user.task }}
+                                    </div>
+                                </div>
+                                <div class="task-description">
+                                    {{ user.description }}
+                                </div>
+                                
+                                
+                                <div class="task-description">
+                                    {{ user.description }}
+                                </div>
+                            </li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">No tasks in this section.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        Completed
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for user in completed_tasks %}
+                            <li class="list-group-item">
+                                {{ user.task }}
+                                <div class="task-description">
+                                    {{ user.description }}
+                                </div>
+                            </li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">No tasks in this section.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script>
+        $(document).ready(function() {
+            $('.radio-button__input').on('change', function() {
+                var task_id = $(this).data('task-id');
+    
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "update_task_status" %}',
+                    data: {
+                        'task_id': task_id,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            console.log('Task status updated successfully.');
+                            location.reload();  // Refresh the page
+                        } else {
+                            console.log('Failed to update task status:', response.error);
+                        }
+                    },
+                    error: function() {
+                        console.log('Error occurred while updating task status.');
+                    }
+                });
+            });
+        });
+    </script>
+    
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
