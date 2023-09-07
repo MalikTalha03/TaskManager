@@ -5,7 +5,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from django.contrib.auth.hashers import make_password
+from django.http import JsonResponse
+from django.contrib.auth.tokens import default_token_generator
+from django.http import HttpResponse
+
 
 def home(request):
     if request.user.is_authenticated:
@@ -102,7 +105,6 @@ def user_logout(request):
     logout(request)
     return redirect('login') 
 
-from django.http import JsonResponse
 
 def update_task_status(request):
     if request.method == 'POST':
@@ -118,3 +120,36 @@ def update_task_status(request):
         except UserData.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Task not found or not authorized.'})
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
+
+
+# Other imports as needed
+
+def update_password(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        # Check if new password and confirmation match
+        if new_password == confirm_password:
+            try:
+                user = User.objects.get(email=email)
+                user.set_password(new_password)  # Set the new password
+                user.save()  # Save the updated user
+
+                # Optionally, you can log the user in automatically
+                authenticated_user = authenticate(request, username=user.username, password=new_password)
+                if authenticated_user is not None:
+                    login(request, authenticated_user)
+
+                # Redirect to a success page or show a success message
+                return redirect(dashboard)
+            except User.DoesNotExist:
+                # User with this email does not exist
+                messages.error(request, 'No user with this email address exists.')
+        else:
+            # Passwords do not match
+            messages.error(request, 'Passwords do not match.')
+
+    # If the request method is GET, render the password update form.
+    return render(request, "update_password.html")
