@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link href="https://unpkg.com/@webpixels/css/dist/index.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for small cards */
+        .small-card {
+            padding: 1rem;
+            background-color: #fff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            max-width: 320px;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+        }
+
+        .small-card .title {
+            display: flex;
+            align-items: center;
+        }
+
+        .small-card .title span {
+            position: relative;
+            padding: 0.5rem;
+            background-color: #10B981;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 9999px;
+        }
+
+        .small-card .title span svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            height: 1rem;
+        }
+
+        .small-card .title-text {
+            margin-left: 0.5rem;
+            color: #374151;
+            font-size: 18px;
+        }
+
+        .small-card .percent {
+            margin-left: 0.5rem;
+            color: #02972f;
+            font-weight: 600;
+            display: flex;
+        }
+
+        .small-card .data {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .small-card .data p {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            color: #1F2937;
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .small-card .data .range {
+            position: relative;
+            background-color: #E5E7EB;
+            width: 100%;
+            height: 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        .small-card .data .range .fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #10B981;
+            width: 76%;
+            height: 100%;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="px-5 py-5 p-lg-0">
+        <div class="d-flex justify-content-center">
+            <div class="col-12 col-md-9 col-lg-7 min-h-lg-screen d-flex flex-column justify-content-center py-lg-16 px-lg-20 position-relative">
+            <div class="row">
+                <!-- Main Content (Login Form) -->
+                <div class="col-lg-8 col-md-9 col-xl-7 mx-auto">
+                <div class="card shadow mb-4"> <!-- Enclosing card -->
+                    <div class="card-body">
+                    <div class="text-center mb-12">
+                        <span class="d-inline-block d-lg-block h1 mb-lg-6 me-3">👋</span>
+                        <h1 class="ls-tight font-bolder h2">
+                        Welcome {{ user_name }}!
+                        </h1>
+                    </div>
+                    
+                    <form method="post" >
+                        <div class="mb-5">
+                            <label class="form-label" for="username">Name</label>
+                            <input type="text" disabled="disabled" class="form-control" name="username" value="{{ full_name }}">
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label" for="email">Email address</label>
+                            <input type="email" disabled="disabled" class="form-control" name="email" value="{{ user_email }}">
+                        </div>
+                    </form>
+                    </div>
+                </div> <!-- End of enclosing card -->
+              </div>
+              <!-- Right Sidebar with Small Cards -->
+              <div class="col-lg-4 col-md-3 col-xl-5">
+                <!-- First Small Card (Total Todo Tasks) -->
+                <div class="small-card">
+                  <div class="title">
+                    
+                    <p class="title-text">Total Todo Tasks</p>
+                  </div>
+                  <div class="data">
+                    <p>{{ total_todo_tasks }}</p> <!-- Replace with the total todo tasks count -->
+                  </div>
+                </div>
+                <!-- Second Small Card (Total Pending Tasks) -->
+                <div class="small-card">
+                  <div class="title">
+                    
+                    <p class="title-text">Total Pending Tasks</p>
+                  </div>
+                  <div class="data">
+                    <p>{{ total_pending_tasks }}</p> <!-- Replace with the total pending tasks count -->
+                    
+                  </div>
+                </div>
+                <!-- Third Small Card (Total Completed Tasks) -->
+                <div class="small-card">
+                  <div class="title">
+                    
+                    <p class="title-text">Total Completed Tasks</p>
+                  </div>
+                  <div class="data">
+                    <p>{{ total_completed_tasks }}</p> <!-- Replace with the total completed tasks count -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</body>
+</html>

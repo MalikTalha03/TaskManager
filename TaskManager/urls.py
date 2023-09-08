@@ -28,5 +28,7 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('update_task_status/', views.update_task_status, name='update_task_status'),
     path('update_password/', views.update_password, name='update_password'),
+    path('my_profile/', views.my_profile, name='my_profile'),
+    path('update_profile/', views.update_profile, name='update_profile'),
 ]
 

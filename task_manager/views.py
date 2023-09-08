@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.http import JsonResponse
 from django.contrib.auth.tokens import default_token_generator
-from django.http import HttpResponse
 
 
 def home(request):
@@ -153,3 +152,57 @@ def update_password(request):
 
     # If the request method is GET, render the password update form.
     return render(request, "update_password.html")
+
+# views.py
+
+
+
+@login_required
+def my_profile(request):
+    # Get the user's name and email
+    full_name = request.user.first_name + ' ' + request.user.last_name
+    user_email = request.user.email
+    user_name = request.user.username
+    
+
+    # Calculate the total tasks
+    total_completed_tasks = UserData.objects.filter(status='Completed', user=request.user).count()
+    total_pending_tasks = UserData.objects.filter(status='Pending', user=request.user).count()
+    total_todo_tasks = UserData.objects.filter(status='None', user=request.user).count()
+
+    return render(request, 'my_profile.html', {
+        'full_name': full_name,
+        'user_email': user_email,
+        'total_completed_tasks': total_completed_tasks,
+        'total_pending_tasks': total_pending_tasks,
+        'total_todo_tasks': total_todo_tasks,
+        'user_name' : user_name,
+    })
+
+@login_required
+def update_profile(request):
+    # Get the user's name and email
+    first_name = request.user.first_name 
+    user_name = request.user.username
+    last_name = request.user.last_name 
+    user_email = request.user.email 
+
+    if request.method == 'POST':
+        updated_first_name=request.POST.get('first_name')
+        updated_last_name=request.POST.get('last_name')
+        updated_email=request.POST.get('email')
+        user = User.objects.get(username=request.user.username)
+        user.first_name = updated_first_name
+        user.last_name = updated_last_name
+        user.email = updated_email
+        user.save()
+        
+        # Redirect or display a success message after handling the form data
+        return redirect( 'dashboard')
+
+    return render(request, 'update_profile.html', {
+        'first_name': first_name,
+        'user_email': user_email,
+        'user_name': user_name,
+        'last_name': last_name,
+    })
