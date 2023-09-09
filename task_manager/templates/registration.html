@@ -5,61 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Manager</title>
     <link href="https://unpkg.com/@webpixels/css/dist/index.css" rel="stylesheet">
+    <style>
+        .error-message {
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <div class="px-5 py-5 p-lg-0">
         <div class="d-flex justify-content-center">
-          <div class="col-12 col-md-9 col-lg-7 min-h-lg-screen d-flex flex-column justify-content-center py-lg-16 px-lg-20 position-relative">
-            <div class="row">
-              <div class="col-lg-10 col-md-9 col-xl-7 mx-auto">
-                <div class="text-center mb-12">
-                    <!-- <a class="d-inline-block" href="#">
-                                  <img src="https://preview.webpixels.io/web/img/logos/clever-primary-sm.svg" class="h-12" alt="...">
-                              </a> -->
-                  <span class="d-inline-block d-lg-block h1 mb-lg-6 me-3">👋</span>
-                  <h1 class="ls-tight font-bolder h2">
-                    Welcome !
-                  </h1>
-                  <p class="mt-2">Let's build someting great</p>
+            <div class="col-12 col-md-9 col-lg-7 min-h-lg-screen d-flex flex-column justify-content-center py-lg-16 px-lg-20 position-relative">
+                <div class="row">
+                    <div class="col-lg-10 col-md-9 col-xl-7 mx-auto">
+                        <div class="text-center mb-12">
+                            <span class="d-inline-block d-lg-block h1 mb-lg-6 me-3">👋</span>
+                            <h1 class="ls-tight font-bolder h2">
+                                Welcome!
+                            </h1>
+                            <p class="mt-2">Let's build something great</p>
+                        </div>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="mb-5">
+                                <label class="form-label" for="email">Email address</label>
+                                <input type="email" class="form-control" name="email" placeholder="Your email address" required>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label" for="username">Username</label>
+                                <input type="text" class="form-control" name="username" placeholder="Your Username" required>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label" for="firstname">First Name</label>
+                                <input type="text" class="form-control" name="firstname" placeholder="First Name" required>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label" for="lastname">Last Name</label>
+                                <input type="text" class="form-control" name="lastname" placeholder="Last Name" required>
+                            </div>
+                            <div class="mb-5">
+                                <label class="form-label" for="password">Password</label>
+                                <input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete="current-password" required>
+                            </div>
+                            <!-- Separate error messages for password requirements -->
+                            <div class="error-message" id="uppercaseError"></div>
+                            <div class="error-message" id="lowercaseError"></div>
+                            <div class="error-message" id="digitError"></div>
+                            <div class="error-message" id="specialCharError"></div>
+                            <div>
+                                <button type="submit" class="btn btn-primary w-full" id="registerButton" disabled>
+                                    Register
+                                </button>
+                            </div>
+                        </form>
+                        <div class="my-6">
+                            <small>Already have an account?</small>
+                            <a href="/login" class="text-warning text-sm font-semibold">Sign in</a>
+                        </div>
+                    </div>
                 </div>
-                <form  method="POST">
-                    {% csrf_token %}
-                    <div class="mb-5">
-                        <label class="form-label" for="email">Email address</label>
-                        <input type="email" class="form-control" name="email" placeholder="Your email address">
-                    </div>
-                    <div class="mb-5">
-                      <label class="form-label" for="username">Username</label>
-                      <input type="text" class="form-control" name="username" placeholder="Your Username">
-                  </div>
-                    <div class="mb-5">
-                        <label class="form-label" for="firstname">First Name</label>
-                        <input type="text" class="form-control" name="firstname" placeholder="FirstName">
-                    </div>
-                    <div class="mb-5">
-                        <label class="form-label" for="lastname">Last Name</label>
-                        <input type="text" class="form-control" name="lastname" placeholder="LastName">
-                    </div>
-                    <div class="mb-5">
-                    <label class="form-label" for="password">Password</label>
-                    <input type="password" class="form-control" name="password" placeholder="Password" autocomplete="current-password">
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary w-full">
-                        Regsiter
-                        </button>
-                    </div>
-                </form>
-                
-                
-                <div class="my-6">
-                  <small>Already have an account?</small>
-                  <a href="/login" class="text-warning text-sm font-semibold" >Sign in</a>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
+    <script>
+        const passwordInput = document.getElementById("password");
+        const uppercaseError = document.getElementById("uppercaseError");
+        const lowercaseError = document.getElementById("lowercaseError");
+        const digitError = document.getElementById("digitError");
+        const specialCharError = document.getElementById("specialCharError");
+        const registerButton = document.getElementById("registerButton");
+
+        // Password validation patterns
+        const uppercasePattern = /[A-Z]/;
+        const lowercasePattern = /[a-z]/;
+        const digitPattern = /\d/;
+        const specialCharPattern = /[@.$!%*?&]/;
+
+        passwordInput.addEventListener("input", () => {
+            const password = passwordInput.value;
+            let hasUppercase = false;
+            let hasLowercase = false;
+            let hasDigit = false;
+            let hasSpecialChar = false;
+
+            if (uppercasePattern.test(password)) {
+                hasUppercase = true;
+                uppercaseError.textContent = "";
+            } else {
+                uppercaseError.textContent = "Password must have at least one uppercase letter.";
+            }
+
+            if (lowercasePattern.test(password)) {
+                hasLowercase = true;
+                lowercaseError.textContent = "";
+            } else {
+                lowercaseError.textContent = "Password must have at least one lowercase letter.";
+            }
+
+            if (digitPattern.test(password)) {
+                hasDigit = true;
+                digitError.textContent = "";
+            } else {
+                digitError.textContent = "Password must have at least one digit.";
+            }
+
+            if (specialCharPattern.test(password)) {
+                hasSpecialChar = true;
+                specialCharError.textContent = "";
+            } else {
+                specialCharError.textContent = "Password must have at least one special character.";
+            }
+
+            // Enable the Register button if all requirements are satisfied
+            if (hasUppercase && hasLowercase && hasDigit && hasSpecialChar) {
+                registerButton.disabled = false;
+            } else {
+                registerButton.disabled = true;
+            }
+        });
+    </script>
 </body>
 </html>
